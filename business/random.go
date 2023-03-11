@@ -13,7 +13,7 @@ func GetRandomNumber(w http.ResponseWriter, r *http.Request) {
 	io.ReadFull(rand.Reader, randomBuffer[:])
 
 	w.Header().Set("Content-Type", "text/plain")
-	w.Write("random number buffer")
+	w.Write([]byte("random number buffer"))
 
 	fmt.Println("random bytes sent to client")
 }
