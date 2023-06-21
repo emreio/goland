@@ -16,6 +16,8 @@ type ServerResponse struct {
 	IsRegistered bool
 }
 
+var connectionCount int = 5
+
 func main() {
 
 	myHttpServer := inmodulelib.New("2222", "1")
@@ -26,6 +28,16 @@ func main() {
 	myHttpServer.AddHandler("/api/query", apiQuery)
 	myHttpServer.AddHandler("/getUsers", business.GetUsers)
 	myHttpServer.AddHandler("/random", business.GetRandomNumber)
+	myHttpServer.AddHandler("/heartbeat", func(w http.ResponseWriter, r *http.Request) {
+
+		connectionCount++
+
+		w.WriteHeader(200)
+
+		word := fmt.Sprintf("Server is running.. Total connection count: %d", connectionCount)
+
+		w.Write([]byte(word))
+	})
 
 	myHttpServer.StartServer()
 }
@@ -57,16 +69,16 @@ func aspectHandler(targetHandler func(w http.ResponseWriter, r *http.Request)) f
 }
 
 func apiQuery(w http.ResponseWriter, r *http.Request) {
-
+	connectionCount++
 	urlValues := r.URL.Query()
 
 	if urlValues["id"] != nil {
 		fmt.Println("query not provided..")
 	}
-
 }
 
 func apiGet(w http.ResponseWriter, r *http.Request) {
+	connectionCount++
 	if r.Method != "GET" {
 		w.WriteHeader(403)
 		w.Write([]byte("METHOD NOT ALLOWED"))
@@ -85,10 +97,12 @@ func apiGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func post(w http.ResponseWriter, r *http.Request) {
+	connectionCount++
 	w.Write([]byte("my lovely post handler"))
 }
 
 func get(w http.ResponseWriter, r *http.Request) {
+	connectionCount++
 	w.Write([]byte("hello go"))
 }
 
@@ -100,4 +114,11 @@ type myFunc func(string, string)
 
 func (m myFunc) Serve() {
 
+}
+
+type me struct {
+}
+
+func (s me) saySomething() {
+	fmt.Println(s)
 }
