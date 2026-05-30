@@ -38,8 +38,6 @@ func main() {
 
 		w.Write([]byte(word))
 	})
-
-	// New handler for getAiStatus API
 	myHttpServer.AddHandler("/getAiStatus", getAiStatus)
 
 	myHttpServer.StartServer()
@@ -111,6 +109,7 @@ func get(w http.ResponseWriter, r *http.Request) {
 
 // New handler for getAiStatus
 func getAiStatus(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusForbidden)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"statusCode":    1,
