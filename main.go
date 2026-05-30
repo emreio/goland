@@ -39,6 +39,9 @@ func main() {
 		w.Write([]byte(word))
 	})
 
+	// New handler for getAiStatus API
+	myHttpServer.AddHandler("/getAiStatus", getAiStatus)
+
 	myHttpServer.StartServer()
 }
 
@@ -104,6 +107,15 @@ func post(w http.ResponseWriter, r *http.Request) {
 func get(w http.ResponseWriter, r *http.Request) {
 	connectionCount++
 	w.Write([]byte("hello go"))
+}
+
+// New handler for getAiStatus
+func getAiStatus(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"statusCode":    1,
+		"statusMessage": "OK",
+	})
 }
 
 func GetSomeData(obj *interface{}) *interface{} {
